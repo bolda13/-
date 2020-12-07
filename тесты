@@ -1,0 +1,42 @@
+from modyl import reduce_fraction
+
+class MyTestCase(unittest.TestCase):
+    def test_modul1(self):
+        result = reduce_fraction(7,49)
+        self.assertEqual(result,"1/7")
+    def test_modyl2(self):
+        result = reduce_fraction(-7, 49)
+        self.assertEqual(result, "-1/7")
+    def test_modyl3(self):
+        result = reduce_fraction(7, -49)
+        self.assertEqual(result, "-1/7")
+    def test_modyl4(self):
+        result = reduce_fraction(-7, -49)
+        self.assertEqual(result, "1/7")
+    def test_modyl5(self):
+        result = reduce_fraction(2,3)
+        self.assertEqual(result, "2/3")
+    def test_modyl6(self):
+        result = reduce_fraction(-2, 3)
+        self.assertEqual(result, "-2/3")
+    def test_modyl7(self):
+        result = reduce_fraction(2, -3)
+        self.assertEqual(result, "-2/3")
+    def test_modyl7(self):
+        result = reduce_fraction(2, -3)
+        self.assertEqual(result, "-2/3")
+    def test_modyl8(self):
+        result = reduce_fraction(-2, -3)
+        self.assertEqual(result, "2/3")
+    def test_modyl9(self):
+        result = reduce_fraction(0,0)
+        self.assertEqual(result, "не возможно сократить дробь")
+    def test_modyl10(self):
+        result = reduce_fraction(0,7)
+        self.assertEqual(result, "не возможно сократить дробь")
+    def test_modyl11(self):
+        result = reduce_fraction(7,0)
+        self.assertEqual(result, "не возможно сократить дробь")
+
+if __name__ == '__main__':
+    unittest.main()
