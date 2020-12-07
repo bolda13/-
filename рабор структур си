@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <string.h>
+//char array_lines(line_t lines, int* num_lines);
+int count_lines(char* buf, long size_file);
+void set_lines(char* buf, long size_file, line_t* lines);
+typedef struct line 
+{
+    char* p_start;
+    char* p_end;
+
+}line_t;
+
+int main()
+{
+    FILE* pm = NULL;
+    fopen_s(&pm,"C:\\Users\\олег\\Desktop\\text.txt","r");
+    if (pm == NULL) 
+    {
+        printf("newiydet");
+    }
+    fseek(pm, 0, SEEK_END);
+    long size_file = ftell(pm);//проверека на ftell
+    if (size_file == NULL)
+    {
+        printf("newydet1");
+    }
+    fseek(pm, 0, SEEK_SET);
+    char* buf = NULL;
+    buf = (char*)calloc(size_file, sizeof(char));
+    if (buf == NULL)
+    {
+        fclose(pm);
+        return -3;
+    }
+    fread(buf, size_file, sizeof(char), pm);
+    int num_lines = count_lines(buf, size_file);
+
+
+
+    line_t* lines = (line_t*)calloc(num_lines, sizeof(line_t));// проверка calloc по массив структур
+    if (lines == NULL)
+    {
+        return -4;
+    }
+    set_lines(buf, size_file, lines);
+    //qsort(lines, num_lines);
+    fclose(pm);
+    free(buf);
+    free(lines);
+}
+
+int count_lines(char* buf, long size_file)
+{
+    int count = 0;
+    for (int i = 0; i < size_file; i++)
+    {
+        if (buf[i] == '\n')
+        {
+           
+           count++;
+        }
+    }
+    return count;
+}
+
+void set_lines(char* buf, long size_file, line_t *lines)
+{ 
+    int count = 0;
+    for (int i = 0; i < size_file; i++)
+    {
+        if (i == 0)
+        {
+            lines[count].p_start = buf;
+        }
+        else if (buf[i] == '\n')
+        {
+            lines[count].p_end = buf + i - 1;
+            count += 1;
+            lines[count].p_start = buf + i + 1;
+        }
+
+    }
+
+}
