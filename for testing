@@ -1,0 +1,245 @@
+def natation2_to10(notation, number):
+
+    dec = int(number, int(notation))
+
+    return dec
+
+def natation3_to10(notation, number):
+
+    dec = int(number, int(notation))
+
+    return dec
+
+def natation8_to10(notation, number):
+
+    dec = int(number, int(notation))
+
+    return dec
+
+def natation16_to10(notation, number):
+
+    dec = int(number, int(notation))
+
+    return dec
+def natation10_to2(t5):
+
+    b = ''
+
+    while t5 > 0:
+        b = str(t5 % 2) + b
+        t5 = t5 // 2
+    return b
+
+def natation10_to3(t5):
+
+    b = ''
+
+    while t5 > 0:
+        b = str(t5 % 3) + b
+        t5 = t5 // 3
+    return b
+
+def notation10_to8(t6):
+    b = ''
+
+    while t6 > 0:
+        b = str(t6 % 8) + b
+        t6 = t6 // 8
+    return b
+
+def notation10_to16(t7):
+
+    b = ''
+    d = []
+
+    while t7 > 0:
+        t = t7 % 16
+        d.append(t)
+        t7 = t7 // 16
+
+    d = d[::-1]
+    for i in range(len(d)):
+        if d[i] < 9:
+            b += str(d[i])
+        elif d[i] > 9:
+            if d[i] == 10:
+                b += "A"
+            elif d[i] == 11:
+                b += "B"
+            elif d[i] == 12:
+                b += "C"
+            elif d[i] == 13:
+                b += "D"
+            elif d[i] == 14:
+                b += "E"
+            elif d[i] == 15:
+                b += "F"
+    return b
+
+def f(notation, to_natation, number):
+
+    if notation == '2' and to_natation == '10':
+
+        convert_2_to10 = natation2_to10(notation, number)
+
+        return "Ваше число в 10 системе счисления "+str(convert_2_to10)
+
+    elif notation == '3' and to_natation == '10':
+
+       convert_3_to10 = natation3_to10(notation, number)
+
+       return "Ваше число в 10 системе счисления " + str(convert_3_to10)
+
+    elif notation == '8' and to_natation == '10':
+
+       convert_8_to10 = natation8_to10(notation, number)
+
+       return "Ваше число в 10 системе счисления " + str(convert_8_to10)
+
+    elif notation == '16' and to_natation == '10':
+
+        convert_16_to10 = natation16_to10(notation, number)
+
+        return "Ваше число в 10 системе счисления " + str(convert_16_to10)
+
+    elif notation == '2' and to_natation == '3':
+
+        convert2_in10 = natation2_to10(notation, number)
+
+        convert10_in3 = natation10_to3(convert2_in10)
+
+        return "Ваше число в 3 системе счисления " + str(convert10_in3)
+
+    elif notation == '2' and to_natation == '8':
+
+        convert2_in10 = natation2_to10(notation, number)
+
+        convert10_in8 = natation10_to8(convert2_in10)
+
+        return "Ваше число в 8 системе счисления " + str(convert10_in8)
+
+    elif notation == '2' and to_natation == '16':
+
+        convert2_in10 = natation2_to10(notation, number)
+
+        convert10_in16 = natation10_to16(convert2_in10)
+
+        return "Ваше число в 16 системе счисления " + str(convert10_in16)
+
+    elif notation == '3' and to_natation == '2':
+
+        convert3_in10 = natation3_to10(notation, number)
+
+        convert10_in2 = natation10_to2(convert3_in10)
+
+        return "Ваше число в 2 системе счисления " + str(convert10_in2)
+    elif notation == '3' and to_natation == '8':
+
+        convert3_in10 = natation3_to10(notation, number)
+
+        convert10_in8 = notation10_to8(convert3_in10)
+
+        return "Ваше число в 8 системе счисления " + str(convert10_in8)
+
+    elif notation == '3' and to_natation == '10':
+
+        convert3_in10 = natation3_to10(notation, number)
+
+        return "Ваше число в 10 системе счисления " + str(convert3_in10)
+
+    elif notation == '3' and to_natation == '16':
+
+        convert3_in10 = natation3_to10(notation, number)
+
+        convert10_in16 = natation10_to16(convert3_in10)
+
+        return "Ваше число в 16 системе счисления " + str(convert10_in16)
+    elif notation == '8' and to_natation == '2':
+
+        convert8_in10 = natation8_to10(notation, number)
+
+        convert10_to2 = natation10_to2(convert8_in10)
+
+        return "Ваше число в 2 системе счисления " + str(convert10_to2)
+
+    elif notation == '8' and to_natation == '3':
+
+        convert8_in10 = natation8_to10(notation, number)
+
+        convert10_to3 = natation10_to3(convert8_in10)
+
+        return "Ваше число в 3 системе счисления " + str(convert10_to3)
+
+    elif notation == '8' and to_natation == '10':
+
+        convert8_in10 = natation8_to10(notation, number)
+
+        return "Ваше число в 10 системе счисления " + str(convert8_in10)
+
+    elif notation == '8' and to_natation == '16':
+
+        convert8_in10 = natation8_to10(notation, number)
+
+        convert10_in16 = natation10_to16(convert8_in10)
+
+        return "Ваше число в 16 системе счисления " + str(convert10_in16)
+
+    elif notation == '10' and to_natation == '2':
+
+
+
+        convert10_to2= natation10_to2(number)
+
+        return "Ваше число в 2 системе счисления " + str(convert10_to2)
+
+    elif notation == '10' and to_natation == '3':
+
+
+
+        convert10_to3 = natation10_to3(number)
+
+        return "Ваше число в 3 системе счисления " + str(convert10_to3)
+
+    elif notation == '10' and to_natation == '8':
+
+
+        convert10_to8 = natation10_to8(number)
+
+        return "Ваше число в 8 системе счисления " + str(convert10_to8)
+
+    elif notation == '10' and to_natation == '16':
+
+
+        convert10_to16 = natation10_to16(number)
+
+        return "Ваше число в 16 системе счисления " + str(convert10_to16)
+
+    elif notation == '16' and to_natation == '2':
+
+        convert16_to10 = natation16_to10(notation, number)
+
+        convert10_to2 = natation10_to2(convert16_to10)
+
+        return "Ваше число в 2 системе счисления " + str(convert10_to2)
+
+    elif notation == '16' and to_natation == '3':
+        convert16_to10 = natation16_to10(notation, number)
+
+        convert10_to3 = natation10_to3(convert16_to10)
+
+        return "Ваше число в 3 системе счисления " + str(convert10_to3)
+
+    elif notation == '16' and to_nataion == '8':
+        convert16_to10 = natation16_to10(notation, number)
+
+        convert10_to8 = natation10_to8(convert16_to10)
+
+        return "Ваше число в 8 системе счисления " + str(convert10_to8)
+
+    elif notation == '16' and to_natation == '10':
+
+        convert16_to10 = natation16_to10(notation, number)
+
+        return "Ваше число в 8 системе счисления " + str(convert16_to10)
+
+f()
