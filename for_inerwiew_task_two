@@ -1,0 +1,18 @@
+def maximal_palindrome(line):
+    res = [line[0]]
+    for lb in range(len(line)):
+        rb = lb
+        try:
+            while True:
+                rb = line.index(line[lb], rb + 1)
+                pal = line[lb:rb + 1]
+                if pal == pal[::-1]:
+                    res.append(pal)
+        except ValueError:
+            pass
+    return max(res, key=len)
+
+def main():
+    line = input()
+    string = maximal_palindrome(line)
+    print(string)
