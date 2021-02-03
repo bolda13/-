@@ -1,0 +1,26 @@
+def output(arr):
+    for row in arr:
+        print(*row)
+
+def helix(array,hel):
+    i, j, d = 0, 0, 0
+    moves = ((0, 1,), (1, 0,), (0, -1,), (-1, 0,),)
+    for k in range(1, hel * hel + 1):
+        array[i][j] = k
+        for l in range(4):
+            newD = (d + l) % 4
+            di, dj = moves[newD]
+            newI, newJ = i + di, j + dj
+            if 0 <= newI < hel and 0 <= newJ < hel and array[newI][newJ] == 0:
+                i, j, d = newI, newJ, newD
+                break
+    return array
+def main():
+    number = int(input())
+    array = [[0] * number for _ in range(number)]
+    arr = helix(array,number)
+    output(arr)
+
+
+if __name__ == "__main__":
+    main()
