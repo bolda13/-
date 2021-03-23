@@ -1,0 +1,176 @@
+import pprint
+import json
+class Huffman:
+
+    # инициализация класса
+    def __init__(self, elements):
+        self.elements = elements
+        self.tree = []
+        # проверяем, что переменная elements является словарем
+        assert type(self.elements) == dict
+
+    # метод создает двоичное дерево
+    def createTree(self):
+        lchars = []
+        trees = []
+        occurrences = 0
+
+        # перебор каждого символа в тексте и добавление в двоичное дерево
+        while len(self.elements) > 1 or len(lchars) > 0:
+
+            # поиск наименьшего количества вхождений символа/дерева в очереди
+            for i in self.elements:
+                if "lnum" not in locals():
+                    lnum = self.elements[i]
+                    continue
+
+                if self.elements[i] < lnum:
+                    lnum = self.elements[i]
+
+            occurrences += lnum
+
+            # соответствие количества вхождений соответствующего символа
+            for i in self.elements:
+                if self.elements[i] == lnum:
+                    lchars.append(i)
+                    del lnum
+                    del self.elements[i]
+                    break
+
+            # как только найдены 2 символа/дерева с наименьшим вхождением,
+            # они объединяются в одно дерево и помещаются обратно в очередь
+            if len(lchars) == 2:
+                if len(lchars[0]) == 1 and len(lchars[1]) == 1:
+                    trees.append(lchars)
+                    self.elements[str(lchars)] = occurrences
+                else:
+                    temp = []
+                    for i in trees:
+                        if str(i) == lchars[0]:
+                            lchars[0] = i
+                            temp.append(trees.index(i))
+                        elif str(i) == lchars[1]:
+                            lchars[1] = i
+                            temp.append(trees.index(i))
+                    for i in range(0,len(temp)):
+                        if i > 0:
+                            del trees[temp[i]-1]
+                        else:
+                            del trees[temp[i]]
+                    self.elements[str(lchars)] = occurrences
+                    trees.append(lchars)
+                occurrences = 0
+                self.tree = []
+                lchars = []
+
+        self.tree = trees[0]
+
+    # метод возвращает сжатое двоичное значение каждого символа в сообщении
+    def compressBin(self):
+        binValues = {}
+        indices = ""
+        binValue = ""
+
+        # устанавливаем значение каждого символа в зависимости от его позиции в дереве
+        # путем перехода к каждому вложенному массиву внутри массива,
+        # содержащего дерево (если массив заполнен)
+        # если это строка, то он устанавливаем значение этого символа на его позицию
+        # и заменяем его пустым списком
+        # продолжаем делать это до тех пор, пока каждый символ и вложенный список
+        # не станет пустым списком, указывая, что он был абсолютно везде
+        while True:
+            if self.tree[0] == [] and self.tree[1] == []:
+                break
+
+            if type(eval(f"{str(self.tree)}{indices}")[0]) == list and eval(f"self.tree{indices}")[0]:
+                indices += "[0]"
+                binValue += "0"
+
+            elif type(eval(str(self.tree) + indices)[0]) == str:
+                binValues[str(eval(f"{str(self.tree)}{indices}")[0])] = binValue + "0"
+                exec(f"self.tree{indices}[0] = []")
+
+            elif type(eval(f"{str(self.tree)}{indices}")[1]) == list and eval(f"self.tree{indices}")[1]:
+                indices += "[1]"
+                binValue += "1"
+
+            elif type(eval(f"self.tree{indices}")[1]) == str:
+                binValues[eval(f"self.tree{indices}")[1]] = binValue + "1"
+                exec(f"self.tree{indices}[1] = []")
+
+            else:
+                exec(f"self.tree{indices} = []")
+                indices = ""
+                binValue = ""
+
+        return binValues
+
+    def decompress(self, characters, compressed):
+        compressed = list(compressed)
+        i = 1
+        start = 0
+
+        # перебор текста, каждое двоичное значение с соответствующим ему символом
+        while i <= len(compressed):
+            if "".join(compressed[start:i]) in characters.values():
+                temp = "".join(compressed[start:i])
+                for j in characters:
+                    if characters[j] == temp:
+                        temp = j
+                        break
+                del compressed[start:i - 1]
+                compressed[start] = temp
+                start += 1
+                i = int(start)
+            i += 1
+
+        return "".join(compressed)
+
+
+with open('lab05', 'r') as file:
+    text = file.readlines()
+text = ''.join(text)
+chars = {}
+for i in text:
+    if i in chars:
+        chars[i] += 1
+    else:
+        chars[i] = 1
+Q = 0
+for i in chars:
+    print(i, chars[i])
+    Q += chars[i]
+cMessage = Huffman(chars)
+cMessage.createTree()
+[i for i in chars.values()][0]
+compressedBins = cMessage.compressBin()
+
+with open('lab_05_dict.txt', 'w') as file:
+    file.write(json.dumps(compressedBins))
+
+compressed = ""
+for i in text:
+    compressed += compressedBins[i]
+
+# кодировка строки в байты
+compressed = bytes(compressed, 'utf-8')
+
+# запись сжатого текста в бинарный файл
+with open('lab_05_bin', 'wb') as file:
+    file.write(compressed)
+
+with open('lab_05_dict.txt', 'r') as file:
+    compressedBins = json.load(file)
+
+with open('lab_05_bin', 'rb') as file:
+    compressed = file.read()
+
+# декодировка байтов в строку
+compressed = compressed.decode()
+
+decompressed = cMessage.decompress(compressedBins, compressed)
+
+with open('lab_05_text_decompressed.txt', 'w') as file:
+    file.write(decompressed)
+
+print(f"Оригинальный текст:\n{text}")
