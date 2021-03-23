@@ -1,0 +1,44 @@
+def vector_factor(matrix1, column_num, row_num):
+    array_factor = [0 for col in range(row_num)]
+    for y in range(row_num):
+        for x in range(1, column_num, 2):
+            array_factor[y] -= matrix1[y][x - 1] * matrix1[y][x]
+    return array_factor
+
+def matrix_input(n):
+    a = []
+    for y in range(n):
+        temp = [int(i) for i in input().split()]
+        a.append(temp)
+    return a
+
+def optimazed_matrix_mult_vinograd(matrix1, matrix2, column_num, row_num, column_num2):
+    vector_matrix1 = vector_factor(matrix1, column_num, row_num)
+    vector_matrix2 = vector_factor(matrix2, column_num2, column_num)
+    result = [[0 for row in range(column_num2)] for col in range(row_num)]
+    for row in range(row_num):
+        for column in range(column_num2):
+            buf = vector_matrix1[row] + vector_matrix2[column]
+            for k in range(1, column_num, 2):
+                buf += (matrix1[row][k - 1] + matrix2[k][column]) * (matrix1[row][k] + matrix2[k - 1][column])
+            result[row][column] = buf
+    if column_num % 2 != 0:
+        for row in range(row_num):
+            for column in range(column_num2):
+                result[i][j] += matrix1[row][column_num - 1] * matrix2[column_num-1][column]
+
+    return result
+
+
+def main():
+    column_num = int(input())  # количество столбцов
+    row_num = int(input())  # количество  строк
+    column_num2 = int(input())  # количество столбцов 2 матрицы
+    matrix1 = matrix_input(row_num)
+    matrix2 = matrix_input(column_num2)
+    result_matrix = optimazed_matrix_mult_vinograd(matrix1, matrix2, column_num, row_num, column_num2)
+    print(result_matrix)
+
+
+if __name__ == '__main__':
+    main()
