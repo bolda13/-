@@ -1,0 +1,65 @@
+import matplotlib.pyplot as plt
+import networkx as nx
+import random
+import pydot
+
+class Node:
+
+    def __init__(self, value=None):
+        self.value = value
+        self.left = None
+        self.right = None
+        self.parent = None
+
+    def __repr__(self) -> str:
+        return "Вершина [значение: '" + str(self.value) + "', левая: " + str(self.left) + ", правая: " + str(self.right) + "]"
+
+def bfs(node: Node) -> None:
+    queue = [node]
+
+    while queue:
+        # Вставляем первый элемент
+        # (будем использовать массив как очередь)
+        top_node = queue.pop(0)
+
+        if top_node:
+            print(top_node.value)
+            queue.append(top_node.left)
+            queue.append(top_node.right)
+
+def preorder(node: Node) -> None:
+    if not node:
+        return
+
+    print(node.value)
+    preorder(node.left)
+    preorder(node.right)
+
+g=nx.DiGraph()
+g.add_edges_from([
+    (1, 2),  (1, 3),
+    (2, 4),  (2, 5),
+    (3, 6),  (3, 7),
+    (4, 8),  (4, 9),
+    (5, 10), (5, 11),
+    (6, 12), (6, 13),
+    (7, 14), (7, 15),
+])
+
+root = Node(1)
+root.left = Node(2)
+root.left.left = Node(4)
+root.left.right = Node(5)
+root.left.left.left = Node(8)
+root.left.left.right = Node(9)
+root.left.right.left = Node(10)
+root.left.right.right = Node(11)
+root.right = Node(3)
+root.right.left = Node(6)
+root.right.right = Node(7)
+root.right.left.left = Node(12)
+root.right.left.right = Node(13)
+root.right.right.left = Node(14)
+root.right.right.right = Node(15)
+print(bfs(root))
+print(preorder(root))
