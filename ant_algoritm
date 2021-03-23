@@ -1,0 +1,148 @@
+from concurrent.futures import ProcessPoolExecutor, _base, Future
+from numpy.random import choice as np_choice
+from itertools import permutations
+from math import hypot, inf, sqrt
+from random import randint
+from typing import List
+from time import time
+
+import matplotlib.pyplot as plt
+import networkx as nx
+import pandas as pd
+import numpy as np
+import heapq as hq
+import acopy
+
+M_ = [
+    [ inf, 1,   2,   7,   5   ],
+    [ 1,   inf, 4,   4,   3   ],
+    [ 2,   4,   inf, 1,   2   ],
+    [ 7,   4,   1,   inf, 3   ],
+    [ 5,   3,   2,   3,   inf ],
+]
+
+M_2 = [
+    [ inf, 6.0, 100.0, 81.0, 23.0],
+    [ 6.0, inf, 0.0, 71.0, 0.0],
+    [ 100.0, 0.0, inf, 0.0, 0.0],
+    [ 81.0, 71.0, 0.0, inf, 0.0],
+    [ 23.0, 0.0, 0.0, 0.0, inf]
+]
+
+G_6 = [
+    [inf,   1.0,  5.5,   52.3,  25.0,  8.8  ],
+    [1.0,   inf,  2.5,   5.0,   5.0,   2.5  ],
+    [5.5,   2.5,  inf,   14.3,  12.0,  33.3 ],
+    [52.3,  5.0,  14.3,  inf,   5.1,   5.5  ],
+    [25.0,  5.0,  12.0,  5.1,   inf,   99.9 ],
+    [8.8,   2.5,  33.3,  5.5,   99.9,  inf  ],
+]
+
+G_6_int = [
+    [inf, 1,   52,  52,  25,  8   ],
+    [1,   inf, 2,   5,   5,   2   ],
+    [5,   2,   inf, 14,  12,  33  ],
+    [52,  5,   14,  inf, 5,   5   ],
+    [25,  5,   12,  5,   inf, 99  ],
+    [8,   2,   33,  5,   99,  inf ],
+]
+
+G_8 = [
+    [inf,   1.0,  5.5,   52.3,  25.0,  8.8 ,  2.0,   2.5  ],
+    [1.0,   inf,  2.5,   5.0,   5.0,   2.5 ,  2.5,   2.5  ],
+    [5.5,   2.5,  inf,   14.3,  12.0,  33.3,  23.0,  32.5 ],
+    [52.3,  5.0,  14.3,  inf,   5.1,   5.5 ,  2.2,   3.3  ],
+    [25.0,  5.0,  12.0,  5.1,   inf,   99.9,  5.0,   22.5 ],
+    [8.8,   2.5,  33.3,  5.5,   99.9,  inf ,  5.0,   12.5 ],
+    [2.0,   2.5,  23.0,  2.2,   5.0,   5.0,   inf,   5.0  ],
+    [2.5,   2.5,  32.5,  3.3,   22.5,  12.5,  5.0,   inf  ],
+]
+
+M_11 = [
+    [ inf,  68.,  64.,  52.,  51.,  71.,  50.,   4.,  63.,  39., 100.],
+    [ 68.,  inf,  73.,  57.,  39.,  82.,  63.,  39.,  45.,  18.,  53.],
+    [ 64.,  73.,  inf,  72.,  36.,  64.,  35.,  99.,  66.,  76.,  68.],
+    [ 52.,  57.,  72.,  inf,   9.,  24.,   6.,  25.,  81.,  51.,  20.],
+    [ 51.,  39.,  36.,   9.,  inf,   1.,  92.,  43.,  27.,  69.,  71.],
+    [ 71.,  82.,  64.,  24.,   1.,  inf,  52.,  53.,  98.,   4.,  65.],
+    [ 50.,  63.,  35.,   6.,  92.,  52.,  inf,  58.,  94.,  23.,  29.],
+    [  4.,  39.,  99.,  25.,  43.,  53.,  58.,  inf,  35.,  36.,  98.],
+    [ 63.,  45.,  66.,  81.,  27.,  98.,  94.,  35.,  inf,  91.,  31.],
+    [ 39.,  18.,  76.,  51.,  69.,   4.,  23.,  36.,  91.,  inf,  40.],
+    [100.,  53.,  68.,  20.,  71.,  65.,  29.,  98.,  31.,  40.,  inf],
+]
+def create_distance_matrix(cities_number):
+    matrix = np.zeros((cities_number, cities_number))
+    for i in range(cities_number):
+        for j in range(i + 1, cities_number):
+            distance = randint(1, 100)  # from the minimum distance to the maximum
+            matrix[i][j], matrix[j][i] = distance, distance
+            # ^^ for symmetry of the matrix with respect to the main axis
+
+    np.fill_diagonal(matrix, inf)
+    return matrix
+def executeWithTimeOut(fnc, *args, **kwargs):
+    with ProcessPoolExecutor() as p:
+        try:
+            f: Future = p.submit(fnc, *args, **kwargs)
+            return f.result(timeout=600)
+        except _base.TimeoutError:
+            for pid, process in p._processes.items():
+                process.terminate()
+            p.shutdown()
+            raise Exception('Process timed out.')
+
+
+class AlgorithmResult:
+
+    def __init__(self, path: List[int], cost: float, executionTime: float):
+        self.path = path
+        self.cost = cost
+        self.executionTime = executionTime
+
+
+def getCost(graph: List[List[float]], path: List[int]) -> float:
+    cost = 0
+    for i in range(len(path) - 1):
+        cost += graph[path[i]][path[i + 1]]
+    return cost
+
+
+def bruteForceTSP(graph: List[List[float]]) -> List[int]:
+    size = len(graph)
+    minCost = inf
+    bestPath = None
+
+    for p in permutations(range(size)):
+        path: List[int] = list(p)
+        path.append(path[0])
+        cost = getCost(graph, path)
+        if minCost > cost:
+            minCost = cost
+            bestPath = path
+
+    return bestPath
+
+
+class BruteForceTSP():
+    def execute(self, graph) -> AlgorithmResult:
+        try:
+            initialTime = time()
+            path = executeWithTimeOut(bruteForceTSP, graph)
+            executionTime = time() - initialTime
+            cost = getCost(graph, path)
+            return AlgorithmResult(path, cost, executionTime)
+        except Exception as e:
+            print(e)
+            return AlgorithmResult([], None, None)
+
+def runner_BF(matrix):
+    go = BruteForceTSP()
+    res = go.execute(matrix)
+    print(f"Кратчайший тур: {res.path}")
+    print(f"Расстояние: {res.cost}")
+    print(f"Время работы перебора: {res.executionTime}")
+    return res.cost
+
+
+etalon_M_ = runner_BF(M_)
