@@ -1,0 +1,55 @@
+def calc_vector(n, m, a):
+    vector = [0] * n
+    mid = m // 2
+    for y in range(n):
+        vector[y] = a[y][0] * a[y][1]
+        for x in range(1, mid):
+            vector[y] += a[y][2 * x - 1] * a[y][2 * x]
+    return vector
+
+def matrix_input(n):
+    a = []
+    for y in range(n):
+        temp = [int(i) for i in input().split()]
+        a.append(temp)
+    return a
+
+def mult_matrix_vinograd(a, b, column_num, column_num2, row_num):
+    rowFactor = calc_vector(row_num, column_num, a)
+    columnFactor = calc_vector(column_num2, column_num, b)
+    mid = column_num // 2
+    result = []
+    for row in range(row_num):
+        result.append([])
+        for column in range(column_num2):
+            result[row].append(-rowFactor[row] - columnFactor[column])
+            for k in range(mid):
+                result[row][column] += (a[row][2 * k] + b[2 * k + 1][column]) * (a[row][2 * k + 1] + b[2 * k][column])
+    if column_num % 2 != 0:
+        for row in range(row_num):
+            for column in range(column_num2):
+                result[row][column] += a[row][column_num-1] * b[column_num-1][column]
+
+    return result
+
+
+
+
+
+    pass
+
+def main():
+    column_num = int(input())# количество столбцов
+    row_num = int(input())# количество  строк
+    column_num2 = int(input())# количество столбцов 2 матрицы
+    a = matrix_input(row_num)
+    b = matrix_input(column_num)
+    c = mult_matrix_vinograd(a, b, column_num, column_num2, row_num)
+    print(c)
+
+
+
+
+
+if __name__ == '__main__':
+    main()
