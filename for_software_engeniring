@@ -1,0 +1,37 @@
+class Detail:
+    def __init__(self,code_detail,category,number_of_details,price):
+        self.code_detail = code_detail
+        self.category = category
+        self.number_of_details = number_of_details
+        self.price = price
+    def print(self,detail):
+        print(str(detail.code_detail)+" "+detail.category+" "+str(detail.number_of_details)+" "+str(detail.price))
+
+class Warehouse:
+    def __init__(self,name_warehouse):
+        self.name_warehouse = name_warehouse
+
+    def append_detail(self,detail):
+        self.warehouse = []
+        self.warehouse.append(detail)
+
+    def delete_detail(self):
+        del self.warehouse[-1]
+
+
+    def sort_detail(self):
+        for i in range(len(self.warehouse)-1):
+            for j in range(len(self.warehouse)- i - 1):
+                if self.warehouse[j.code_detail] > self.warehouse[j.code_detail + 1]:
+                    self.warehouse[j.code_detail], self.warehouse[j.code_detail + 1] = self.warehouse[j.code_detail + 1], self.warehouse[j.code_detail]
+
+    def min_catgory_sum_detail(self,category):
+        self.sum_min = 0
+        for i in range(self.warehouse):
+            if i.category == category:
+                if i.number_of_details * i.price > self.sum_min:
+                    self.sum_min = i.number_of_details * i.price
+
+        return self.sum_min
+    def print(self):
+        print(self.warehouse)
