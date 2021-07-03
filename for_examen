@@ -1,0 +1,94 @@
+public class Otchet
+    {
+
+ 
+        public string FileName { get; set; }
+
+        public Otchet(string filename) 
+        {
+            FileName = filename;
+        }
+        public List<string> Parsefile() 
+        {
+            List<string> res = new List<string>();
+
+            using (StreamReader sr = new StreamReader(FileName, System.Text.Encoding.Default))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    line.Split(";");
+                    res.Add(line);
+                }
+            }
+            return res;
+        }
+        public decimal AllSumm(List<string> res) 
+        {
+            decimal summa = 0;
+            foreach (string i in res) 
+            {
+                summa += Convert.ToDecimal(i[5]);
+            }
+            return summa;
+        }
+        public string BestSeller(List<string> res) 
+        {
+            Dictionary<string,int> dictseller = new Dictionary<string, int>();
+            foreach (string i in res) 
+            {
+                dictseller.Add(Convert.ToString(i[2]), Convert.ToInt32(i[5]));
+                if (dictseller.ContainsKey(Convert.ToString(i[2])))
+                {
+                    dictseller[Convert.ToString(i[2])] += i[5];
+                }
+            }
+           string MaxSeller = dictseller.Keys.Max();
+            return MaxSeller;
+        }
+
+        public string WorstSeller(List<string> res) 
+        {
+            Dictionary<string, int> dictseller = new Dictionary<string, int>();
+            foreach (string i in res)
+            {
+                dictseller.Add(Convert.ToString(i[2]), Convert.ToInt32(i[5]));
+                if (dictseller.ContainsKey(Convert.ToString(i[2])))
+                {
+                    dictseller[Convert.ToString(i[2])] += Convert.ToInt32(i[5]);
+                }
+            }
+            string MinSeller = dictseller.Keys.Min();
+            return MinSeller;
+        }
+        public int BestSummaSeller(List<string> res) 
+        {
+            Dictionary<string, int> dictseller = new Dictionary<string, int>();
+            foreach (string i in res)
+            {
+                dictseller.Add(Convert.ToString(i[2]), Convert.ToInt32(i[5]));
+                if (dictseller.ContainsKey(Convert.ToString(i[2])))
+                {
+                    dictseller[Convert.ToString(i[2])] += Convert.ToInt32(i[5]);
+                }
+            }
+            int maxValue = dictseller.Values.Max();
+            return maxValue;
+        }
+
+        public int WorstSummaSeller(List<string> res)
+        {
+            Dictionary<string, int> dictseller = new Dictionary<string, int>();
+            foreach (string i in res)
+            {
+                dictseller.Add(Convert.ToString(i[2]), Convert.ToInt32(i[5]));
+                if (dictseller.ContainsKey(Convert.ToString(i[2])))
+                {
+                    dictseller[Convert.ToString(i[2])] += Convert.ToInt32(i[5]);
+                }
+            }
+            int minValue = dictseller.Values.Min();
+            return minValue;
+        }
+
+    }
