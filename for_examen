@@ -90,5 +90,14 @@ public class Otchet
             int minValue = dictseller.Values.Min();
             return minValue;
         }
+        public void Output(string writePath, int year, string month, int summa, string bestseller, int maxsummaseller, string worstseller, int worstsellersumma) 
+        {
+            string text = "Год  Месяц   Выручка   Лучший родовец  Выручка лучшего продавца  Худший продавец Выручка худшего продавца";
+            using (StreamWriter sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
+            {
+                sw.WriteLine(text);
+                sw.WriteLine(year + "  " + month + "  " + summa + "  " + bestseller + "  " + maxsummaseller + "  " + worstseller + " " + "  " + worstsellersumma);
+            }
+        }
 
     }
